@@ -12,10 +12,17 @@
 }
 \usepackage[margin=1.5in]{geometry}
 \usepackage{siunitx}
+\newcommand{\FVA}{\mathrm{FVA}} % Future Value of Annuity
+\newcommand{\PVA}{\mathrm{PVA}} % Present Value of Annuity
+\newcommand{\pmt}{\text{PMT}} % Payment
+\newcommand{\FV}{\mathrm{FV}} % Future Value Matrix
+\newcommand{\p}{\mathcal{P}} % Principal
+\newcommand{\FVSA}{\FV_{S\!A}} % Future Value Matrix for an Single-payment Annuity
+\newcommand{\FVOA}{\FV_{O\!A}} % Future Value Matrix for an Ordinary Annuity
 
 \begin{document}
 
-\title{ARE142: Annuity Formula}
+\title{ARE142: Annuity As A Matrix}
 \author{Tao Wang}
 \date{\today}
 
@@ -23,131 +30,157 @@
 
 \section{Introduction}
 \begin{quote}
-    There are three types of personal savings strategies in ARE142, each has its own formula.
-    Some of them revolve around the concept of \textit{annuity}, which is a contract that provides a series of regular payments over a period.
 
-
-    They are:
-
-    \begin{enumerate}
-        \item One-Time payment now and compound after n years
-        \item Save money every year and compound after n years
-        \item Withdraw \$X annually for n years from an initial saving that compound
-    \end{enumerate}
-
-    They correspond to three formula (1.2, 1.3, 1.4) to calculate their future and present values:
-
-    \subsection{Definition}
-    \begin{align}
-         & \text{FV = Future Value}                         \\
-         & \text{PV = Present Value}                        \\
-         & \text{PMT = Periodic Payment in an Annuity}      \\
-         & \text{i = Interest Rate}                         \\
-         & FV_{year = 0} = PV                               \\
-         & FV_{year = k + 1} = FV_{year = k} \times (1 + i) \\
-    \end{align}
-
-    \subsection{Future value of initial savings compounded after n years}
-    \subsubsection{Formula}
-    \begin{quote}
-        \[
-            FV_{year = n} = PV (1 + i)^n
-        \]
-    \end{quote}
-    \subsubsection{Proof}
-    \begin{quote}
-        We will show that this is true through the strong induction.
-
-        At year 0, we have
-        \[
-            FV_{year = 0} = PV (1 + i)^{0} = PV
-        \]
-        This is true because future value at year 0 is the present value.
-
-        We can assume that right after year k, we have
-        \[
-            FV_{year = k} = PV (1 + i)^{k}
-        \]
-
-        Right after year k + 1, by we have
-
-        \[
-            FV_{year = k + 1} = PV (1 + i)^{k + 1} = (1 + i)PV(1 + i)^{k} = FV_{year = k} \times (1 + i)
-        \]
-
-        By Definition,
-        \[
-            FV_{year = k} \times (1 + i) = FV_{year = k + 1}
-        \]
-
-        Therefore, $FV_{year = n} = PV (1 + i)^n$
-
-    \end{quote}
-
-    \subsection{Future value of n year annuity with payment starting at the end of the first year}
-    \subsubsection{Formula}
-    \begin{quote}
-        \[
-            FV_{year = n} = \frac{\text{PMT}}{i}\left[(1 + i)^n - 1\right]
-        \]
-    \end{quote}
-    \subsubsection{Derivation}
-    \begin{quote}
-        We will pay annuity at the end of each year from year 1 to n.
-
-        Moreover, each annuity will compound until after n years.
-
-        According to Formula 1.2.1, we can express the future value of the compounded kth annuity ($PV_k$) at the end of year n as
-        \[
-            FV_{year = n} = PV_k (1 + i)^{n - i}
-        \]
-
-        To find the total future value of n year annuity, we will combine all of the compounded kth annuity from the end of year 1 to n.
-        We assume all annuity have the same PMT.
-        \[
-            FV_{year = n} = \sum_{k = 1}^{n} \text{PMT} (1 + i)^{k - 1} = \text{PMT} (1 + i)^{0} + \text{PMT} (1 + i)^{1} + \ldots + \text{PMT} (1 + i)^{n - 1}
-        \]
-
-        This is a divergent geometric series whose sum is
-        \[
-            FV_{year = n} = \frac{\text{PMT}(1 - (1 + i)^n)}{(1 - (1 + i))}
-        \]
-
-        As a result,
-        \[
-            FV_{year = n} = \frac{\text{PMT}}{-i}(1 - (1 + i)^n) = \boxed{\frac{\text{PMT}}{i}\left[(1 + i)^n - 1\right]}
-        \]
-    \end{quote}
-
-
-    \subsection{Present value of n year annuity with payments start at the end of the first year}
-    \subsubsection{Formula}
-    \begin{quote}
-        \[
-            PV_{year = 0} = \frac{\text{PMT}}{i}\left[1 - \frac{1}{(1 + i)^n}\right]
-        \]
-    \end{quote}
-    \subsubsection{Derivation}
-    \begin{quote}
-        The annuity allows us to withdraw the the same PMT at end of the kth year.
-
-        We can get the present value of this withdrawal at the beginning of year 1 with
-        \[
-            PV_{year=0} = \frac{\text{PMT}}{(1 + i)^{k}} = \text{PMT}\left(\frac{1}{1 + i}\right)^k
-        \]
-
-        Similar to how we found Formula 1.3, we will add all of the kth present values and find the sum of the geometric series
-
-
-        \[  PV_{year=0} = \sum_{k = 1}^{n} \text{PMT}\left(\frac{1}{1 + i}\right)^k = \left(\frac{1}{1 + i}\right)\left(\sum_{k = 1}^{n} \text{PMT}\left(\frac{1}{1 + i}\right)^{k - 1}\right) \]
-        \[= \left(\frac{1}{1 + i}\right) \frac{\text{PMT}(1 - (\frac{1}{1 + i})^n)}{(1 - (\frac{1}{1 + i}))}\]
-        \[= \left(\frac{1}{\left(1 + i - 1\right)}\right)\text{PMT}\left(1 - \left(\frac{1}{1 + i}\right)^n\right)\]
-        \[= \boxed{\frac{\text{PMT}}{i}\left[1 - \frac{1}{(1 + i)^n}\right]}\]
-
-
-
-
-    \end{quote}
 \end{quote}
+
+\section{General Finance Definition}
+\begin{quote}
+    \begin{itemize}
+        \item Money: a financial asset whose real worth is changing with the period according to the Time Value of Money.
+        \item Payment ($\pmt$): a money. A positive payment means money added to an account, while a negative payment means it's taken out of the account.
+        \item Principal ($\p$): an original sum of money invested or lent.
+        \item Period: an whole number point in time that starts at 0.
+        \item Future Value ($FV_{k, j}$): the worth at period $k$ of a payment made at period $j$.
+        \item Present Value ($PV_j$): the worth at period 0 of a payment that is or will be made at period $j$.
+              \begin{align*}
+                  \\
+                  PV_j & = FV_{0, j} & \text{(The Future at Right Now is Present)} \\
+              \end{align*}
+        \item Time Value of Money: The worth of money is constantly changing
+              \begin{align*}
+                  FV_{k,j} =
+                  \begin{cases}
+                      FV_{k-1,j} \times (1 + i_k)      & \text{if } k > j \\
+                      FV_{k+1,j} \times (1 + i_k)^{-1} & \text{if } k < j
+                  \end{cases}
+              \end{align*}
+    \end{itemize}
+\end{quote}
+
+\section{Future Value Matrix for Annuity}
+\begin{quote}
+    The future values ($FV_{k, j}$) of a group of payment made to an annuity (from the annuity's perspective) could be described by a Future Value Matrix (FV) that follows the Time Value of Money.
+    \[
+        \FV =
+        \begin{bmatrix}
+            FV_{0,0} & FV_{0,1} & \cdots & FV_{0,n} \\
+            FV_{1,0} & FV_{1,1} & \cdots & FV_{1,n} \\
+            \vdots   & \vdots   & \ddots & \vdots   \\
+            FV_{n,0} & FV_{n,1} & \cdots & FV_{n,n}
+        \end{bmatrix}
+    \]
+
+    where $0 \leq k \leq n$ and  $0 \leq j \leq n$
+\end{quote}
+
+\subsection{Definition: Future Value of Annuity}
+
+\begin{quote}
+    $\FVA$ is the total future value at period $k$ of all payments made to the annuity. We could think of it as summing each row of the Future Value Matrix until the diagonal element.
+    \begin{align*}
+        \FVA_{k} & = \sum_{j = 0}^{k} FV_{k, j} & (\text{Future Value of Annuity}) \\
+    \end{align*}
+\end{quote}
+
+\subsection{Definition: Present Value of Annuity}
+\begin{quote}
+    $\PVA$ is the total present value at period 0 of all payments that is or will be made to the annuity.
+    \begin{align*}
+        \PVA & = \sum_{j = 0}^{n} PV_{j} = \sum_{j = 0}^{n} FV_{0, j} & (\text{Present Value of Annuity}) \\
+    \end{align*}
+\end{quote}
+
+\section{Types of Annuity}
+\begin{quote}
+    There are different types of annuity that each fill the Future Value Matrix in a different way.
+
+    Using the Definition of each Annuity, we can derive the Growth Function and the Valuation. The Growth Function encapsulates the recursive relationship between sums of each row of the Future Value Matrix. The Valuation is a closed form formula for the sum of row $k$.
+\end{quote}
+
+\subsection{Single Payment Annuity}
+\begin{quote}
+    A Single Payment Annuity is denoted by $\FVSA$.
+
+    It is A single payment, $\pmt$, made to the annuity at period 0.
+\end{quote}
+\subsubsection{Definition}
+\begin{align*}
+     & FV_{k,j}        & =
+    \begin{cases}
+        \p                               & \text{if } k = 0 \text{ and } j = 0    \\
+        0                                & \text{if } k \neq 0 \text{ and } k = j \\
+        FV_{k-1,j} \times (1 + i_k)      & \text{if } k > j                       \\
+        FV_{k+1,j} \times (1 + i_k)^{-1} & \text{if } k < j                       \\
+    \end{cases} \\\\
+     & 0 \leq k \leq n & \text{(Definition of Future Value Matrix)}           \\
+     & 0 \leq j \leq n & \text{(Definition of Future Value Matrix)}           \\
+     & i_k = i_0       & \text{(Constant Interest)}                           \\
+\end{align*}
+\[
+    \FVSA =
+    \begin{bmatrix}
+        \p            & 0      & \cdots & 0      \\
+        \p(1 + i_0)^1 & 0      & \cdots & 0      \\
+        \vdots        & \vdots & \ddots & \vdots \\
+        \p(1 + i_0)^n & 0      & \cdots & 0      \\
+    \end{bmatrix}
+\]
+\subsubsection{Growth Function}
+\[\FVA_{k+1} = \FVA_{k} \times (1 + i_0)\]
+
+\subsubsection{Valuation}
+\begin{align*}
+     & \PVA = \FVA_0 = \p        \\
+     & \FVA_k = \p (1 + i_0) ^ k \\
+\end{align*}
+\subsubsection{Derivation}
+\begin{quote}
+    Derive $\FVA_{k}$
+\end{quote}
+
+\subsection{Ordinary Annuity}
+\begin{quote}
+    An Ordinary Annuity is represented by $\FVOA$.
+
+    It is a regular stream of equal payments to the annuity starting at period $1$ to period $n$ (inclusive) with a principal, $\p$.
+\end{quote}
+\subsubsection{Definition}
+\begin{align*}
+     & FV_{k,j}        & =
+    \begin{cases}
+        \p                               & \text{if } k = 0 \text{ and } j = 0    \\
+        \pmt                             & \text{if } k \neq 0 \text{ and } k = j \\
+        FV_{k-1,j} \times (1 + i_k)      & \text{if } k > j                       \\
+        FV_{k+1,j} \times (1 + i_k)^{-1} & \text{if } k < j                       \\
+    \end{cases} \\\\
+     & 0 \leq k \leq n & \text{(Definition of Future Value Matrix)}           \\
+     & 0 \leq j \leq n & \text{(Definition of Future Value Matrix)}           \\
+     & i_k = i_0       & \text{(Constant Interest)}                           \\
+\end{align*}
+\[
+    \FVOA =
+    \begin{bmatrix}
+        \p            & \pmt (1 + i_0)^{-1}  & \cdots & \pmt (1 + i_0)^{-n}       \\
+        \p(1 + i_0)^1 & \pmt                 & \cdots & \pmt (1 + i_0)^{-(n - 1)} \\
+        \vdots        & \vdots               & \ddots & \vdots                    \\
+        \p(1 + i_0)^n & \pmt (1 + i_0)^{n-1} & \cdots & \pmt                      \\
+    \end{bmatrix}
+\]
+\subsubsection{Growth Function}
+\[\FVA_{k+1} = \FVA_{k} \times (1 + i_0) + \pmt\]
+
+\subsubsection{Valuation}
+\begin{align*}
+    \PVA   & = \p + \sum_{j = 1}^{n} \pmt \left( \frac{1}{1+i_0} \right)^j            \\
+           & = \p + \frac{\pmt}{i_0}\left[1 - \frac{1}{(1 + i_0)^n}\right]            \\
+    \FVA_k & = \p(1+i_0)^k + \sum_{k = 1}^{n} \pmt (1 + i)^{k - 1}                    \\
+           & =\p(1+i_0)^k + \displaystyle\frac{\pmt}{i_0}\left[(1 + i_0)^k - 1\right] \\
+\end{align*}
+\subsubsection{Derivation}
+\begin{quote}
+    Derive $\FVA_{k}$
+\end{quote}
+
+
 
 \end{document}

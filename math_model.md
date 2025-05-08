@@ -1,35 +1,45 @@
 # Mathematical Model
+
 ## General Finance Definition
+
 * **Money**: an financial asset whose real worth is changing with the period
+* **Payment (PMT)**: a money added to an account or contract
 * **Period**: here, a period is an integer point in time where the saving's worth is evaluated.
+
   ```
   |  |  |  |  | ... |
   0  1  2  3  4 ... n
   ```
-* **Future Value ($FV_{k}$)**: the future worth of a present sum of money at period k
-* **Present Value ($PV$)**: the present worth of a future sum of money at period 0
+
+* **Future Value ($FV_{j, k}$)**: the future worth of the jth payment at period k
+* **Present Value ($PV$)**: the present worth of a future sum of money at period 0. $FV_{\text{period}=0,\space \text{payment}=j}$ is the future value at period 0 of the jth payment
+
 $$
-    FV_{0} = PV
+    PV = \sum FV_{\text{period}=0,\space \text{payment}=j}
 $$
+
 * **Interest Rate**: the rate (in decimal) that money changes its value with the period (could be positive, negative, or 0).
-* **PMT**: money value of each payment to an account or contract
 
 ## Definition 1: Discrete Compounding
 
 When an initial sum of money keeps growing through an interest gain and the interest gain generates more interest gains.
 
-1. **Initial Value**
+### Initial Value
+
 $$
     FV_{0} = PV
 $$
-2. **Growth $(k \geq 0)$**
+
+### Growth $(k \geq 0)$
+
 $$
     FV_{k+1}=(FV_{k}) \times (1 + i)
 $$
 
-
 ## Formula 1: Discrete Compounding
-### Formula
+
+### Formula 1
+
 Future Value of an Annually Compounding Present Value
 
 $$
@@ -37,15 +47,18 @@ $$
 $$
 
 ### Observations
+
 * This formula applies only if we put the money earned through interest back into savings
 * Saving money might not be the best option because inflation is a negative interest that chips away savings
 * At a fixed $n$ and $i$, $FV_{n}$ is proportional to the $PV$
 * Given a future value at period $n$ with $i$, we can compute the present value
 
 ### Example
+
 * If you save $100 today into the bank and earn interest of 10%, how much do you have in 3 years (assume no withdrawal)?
 
 ### Proof
+
 We will show that this is true through the strong induction.
 
 **Base Case**: At the end of period 0, we have
@@ -79,20 +92,33 @@ This is **true** from *Definition 1.2*
 Therefore, *Formula 1* is true.
 
 ## Definition 2: Annuity
-1. **Initial Payment**
+
+### Initial Payment
+
 $$
     FV_{1} = PMT
 $$
-2. **Growth** ($k \geq 1$)
+
+### Growth ($k \geq 1$)
+
 $$
-    FV_{k+1} = (FV_{k}) \times (1 + i) + \text{PMT}\\ 
+    FV_{k+1} = (FV_{k}) \times (1 + i) + \text{PMT}\\
+$$
+
+### Present Value
+
+$$
+    PV = \sum FV_{0, k}
 $$
 
 * **Annuity**: a contract that requires regular payments for more than one full period to the person/account entitled to receive the payments.
 The **first payment starts at period 1**.
 * **Perpetuity**: an annuity with no end (infinite period)
+
 ## Formula 2: Future Value of an Annuity
-### Formula 
+
+### Formula
+
 Future value **at period n** of an annuity with PMT **starting at period 1**
 
 $$
@@ -103,13 +129,16 @@ $$
 $$
 
 ### Observations
+
 * We can derive the following summation through the recurrence relations in *Definition 2*, then use the geometric series sum to derive *Formula 2*
+
 $$
       FV_{n} = \sum_{k = 1}^{n} \text{PMT} (1 + i)^{k - 1} \\
       = \text{PMT} (1 + i)^{0} + \text{PMT} (1 + i)^{1} + \ldots + \text{PMT} (1 + i)^{n - 1}
 $$
 
 ### Examples
+
 * If you save $1000 a year for three years, starting at the end of the first year, how much do you have in three years?
 * If you wanted to have $1,000,000 40 years from now (at n=40), how much do you have to save every year?
 
@@ -147,6 +176,7 @@ We know the inductive case is true by *Definition 2.2*
 Therefore, *Formula 2* is true.
 
 ## Formula 3: Present Value of an n-year Annuity
+
 ### Formula
 
 The present value of an n-year annuity with the first payment **starting at period 1** and the **last payment at period n**
@@ -159,6 +189,7 @@ $$
 $$
 
 ### Observations
+
 * We can derive this formula by finding the present value of each payment then sum them to get the money's present value in total
 
 $$
@@ -167,6 +198,7 @@ $$
 $$
 
 ### Examples
+
 ### Proof
 
 <!-- Inflation
@@ -191,3 +223,20 @@ At year 1,
 
 FV / PV = 1/(1 + inflation)
 FV = PV/(1 + inflation) -->
+
+Q1: How to compare the real value of lumped sum (single-payment annuity) and an annual payment (ordinary annuity) that both ends at period n, n >= 1 and interest is positive?
+
+compare the PVA and see which one is greater
+
+OR
+
+compare the FVA at n and see which one is greater
+
+Lumped sum with single PMT is always greater than lumped sum over n with ordinary annuity
+
+Q2: How to compare which compounding interest rate is better?
+
+Q3: Why pmt chips away the interest first?
+
+Q4: Why given the same loan, extending the period would shrink payment but increase the interest paid over life time
+Q5: What happens when i_k are not constant
